@@ -1,0 +1,5 @@
+/node_modules/
+database.mwb.bak
+database.sql
+/dist/
+/.idea/
