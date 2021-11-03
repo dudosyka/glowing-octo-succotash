@@ -10,7 +10,7 @@ export class User extends Model {
   fullname: string
 
   @Column
-  login: string
+  username: string
 
   @Column
   password: string

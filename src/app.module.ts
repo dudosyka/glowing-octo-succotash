@@ -1,14 +1,13 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PostModule } from './post/post.module';
-import { UserModule } from './user/user.module';
-import { DatabaseModule } from './database/database.module';
-import { AuthMiddleware } from './auth.middleware';
 import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { PassportModule } from '@nestjs/passport';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
-  imports: [PostModule, UserModule, DatabaseModule, AuthModule],
+  imports: [AuthModule, UserModule, PassportModule, DatabaseModule],
   controllers: [AppController],
   providers: [AppService],
 })

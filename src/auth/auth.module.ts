@@ -1,15 +1,18 @@
-import { Global, Injectable, Module } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { AuthAssignments } from '../database/auth.assignments.model';
-import { UserRole } from '../database/user.role.model';
+import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { User } from '../database/user.model';
-import { Role } from '../database/role.model';
+import { UserModule } from '../user/user.module';
+import { LocalStrategy } from './strategy/local.strategy';
+import { PassportModule } from '@nestjs/passport';
+import { jwtConstants } from './constants';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
-  imports: [
-    SequelizeModule.forFeature([User, AuthAssignments, UserRole, Role])
-  ],
-  providers: [Number, AuthService],
+  imports: [UserModule, PassportModule, JwtModule.register({
+    secret: jwtConstants.secret,
+    signOptions: { expiresIn: '60s' },
+  })],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}
