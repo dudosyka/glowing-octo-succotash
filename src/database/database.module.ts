@@ -1,10 +1,10 @@
 import { Global, Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { User } from './user.model';
-import { AuthAssignments } from './auth.assignments.model';
-import { UserRole } from './user.role.model';
-import { Role } from './role.model';
-import { Rule } from './rule.model';
+import { User } from '../user/user.model';
+import { AuthAssignments } from '../auth/model/auth.assignments.model';
+import { UserRole } from '../auth/model/user.role.model';
+import { Role } from '../auth/model/role.model';
+import { Rule } from '../auth/model/rule.model';
 
 @Global()
 @Module({

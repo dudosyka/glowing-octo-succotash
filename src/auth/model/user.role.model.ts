@@ -1,4 +1,4 @@
-import { Table, Column, Model, HasOne, BelongsTo, ForeignKey } from 'sequelize-typescript';
+import { Table, Column, Model, BelongsTo } from 'sequelize-typescript';
 import { Role } from './role.model';
 
 @Table({
@@ -10,7 +10,7 @@ export class UserRole extends Model {
   @Column
   user_id: number
 
-  @HasOne(() => Role)
+  @BelongsTo(() => Role, 'auth_role_id')
   role: Role
   // @Column
   // auth_role_id: number

@@ -1,6 +1,5 @@
-import { Table, Column, Model, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript';
+import { Table, Column, Model, ForeignKey, HasMany } from 'sequelize-typescript';
 import { UserRole } from './user.role.model';
-import { Rule } from './rule.model';
 import { AuthAssignments } from './auth.assignments.model';
 
 @Table({
@@ -16,7 +15,7 @@ export class Role extends Model {
   @Column
   name: string
 
-  @HasMany(() => AuthAssignments)
+  @HasMany(() => AuthAssignments, 'auth_role_id')
   assignments: AuthAssignments[]
 
 }

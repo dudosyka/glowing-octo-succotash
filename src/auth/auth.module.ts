@@ -6,9 +6,23 @@ import { PassportModule } from '@nestjs/passport';
 import { jwtConstants } from './constants';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { UserRole } from './model/user.role.model';
+import { Role } from './model/role.model';
+import { Rule } from './model/rule.model';
+import { AuthAssignments } from './model/auth.assignments.model';
 
 @Module({
-  imports: [UserModule, PassportModule, JwtModule.register({
+  imports: [
+    UserModule,
+    PassportModule,
+    SequelizeModule.forFeature([
+      UserRole,
+      Role,
+      Rule,
+      AuthAssignments
+    ]),
+    JwtModule.register({
     secret: jwtConstants.secret,
     signOptions: { expiresIn: '60s' },
   })],

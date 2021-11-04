@@ -1,4 +1,4 @@
-import { Table, Column, Model, HasMany, HasOne, ForeignKey } from 'sequelize-typescript';
+import { Table, Model, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { Role } from './role.model';
 import { Rule } from './rule.model';
 
@@ -11,9 +11,9 @@ export class AuthAssignments extends Model {
   @ForeignKey(() => Role)
   id: number
 
-  @HasOne(() => Role)
-  parent: Role
+  @BelongsTo(() => Role, 'auth_role_id')
+  role: Role
 
-  @HasOne(() => Rule)
-  child: Rule
+  @BelongsTo(() => Rule, 'auth_rule_id')
+  rule: Rule
 }

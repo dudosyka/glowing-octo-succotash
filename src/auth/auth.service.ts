@@ -1,26 +1,60 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../database/user.model';
+import { CryptUtil } from '../crypt.util';
+import { InjectModel } from '@nestjs/sequelize';
+import { UserRole } from './model/user.role.model';
+import { Role } from './model/role.model';
+import { Rule } from './model/rule.model';
+import { AuthAssignments } from './model/auth.assignments.model';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UserService,
-              private readonly jwtService: JwtService) {}
+              private readonly jwtService: JwtService,
+              @InjectModel(UserRole) private userRoleModel: typeof UserRole) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
-    if (user && user.password === pass) {
+    const crypt = new CryptUtil();
+    const user = await this.usersService.findByLogin(username);
+    const compare = await crypt.compare(pass, user.password);
+    if (user && compare) {
       const { password, ...result } = user;
-      return result;
+      return { ...result, rules: await this.getRules(user.id) };
     }
     return null;
   }
 
-  async login(user: User) {
-    const payload = { sub: user.id };
+  async login(user: any) {
+    console.log(user);
+    const payload = { sub: user.id, rules: user.rules };
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
+
+  async getRules(userId: number): Promise<any> {
+    return this.userRoleModel.findAll({
+      include: [
+        {
+          model: Role,
+          include: [
+            {
+              model: AuthAssignments,
+              include: [ Rule ]
+            }
+          ]
+        }
+      ],
+      where: {
+        user_id: userId
+      }
+    }).then(userRoles => {
+      const rules = [];
+      userRoles.map(userRole => userRole.role.assignments.map(assignment => rules.push(assignment.rule.id)) );
+      return rules;
+    })
+  }
 }
+
+

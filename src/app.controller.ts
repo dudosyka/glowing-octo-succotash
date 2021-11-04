@@ -1,7 +1,7 @@
 import { Controller, Request, Post, UseGuards, Get } from '@nestjs/common';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/guard/local-auth.guard';
-import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
+import { CryptUtil } from './crypt.util';
 
 @Controller()
 export class AppController {
@@ -13,9 +13,9 @@ export class AppController {
     return this.authService.login(req.user);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  @Get()
+  async pass() {
+    const cryptUtil = new CryptUtil();
+    return await cryptUtil.crypt('changeme');
   }
 }
