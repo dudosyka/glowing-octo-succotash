@@ -7,6 +7,7 @@ import { UserRole } from './model/user.role.model';
 import { Role } from './model/role.model';
 import { Rule } from './model/rule.model';
 import { AuthAssignments } from './model/auth.assignments.model';
+import { User } from '../user/user.model';
 
 @Injectable()
 export class AuthService {
@@ -54,6 +55,10 @@ export class AuthService {
       userRoles.map(userRole => userRole.role.assignments.map(assignment => rules.push(assignment.rule.id)) );
       return rules;
     })
+  }
+
+  async issueRole(user: User, role: number): Promise<boolean> {
+    return (await this.userRoleModel.create({user_id: user.id, auth_role_id: role})) !== null;
   }
 }
 

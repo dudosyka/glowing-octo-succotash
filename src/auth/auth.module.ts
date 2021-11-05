@@ -23,9 +23,10 @@ import { AuthAssignments } from './model/auth.assignments.model';
       AuthAssignments
     ]),
     JwtModule.register({
-    secret: jwtConstants.secret,
-    signOptions: { expiresIn: '60s' },
-  })],
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: '60s' },
+    })
+  ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
 })
