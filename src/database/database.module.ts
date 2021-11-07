@@ -5,6 +5,12 @@ import { AuthAssignments } from '../auth/model/auth.assignments.model';
 import { UserRole } from '../auth/model/user.role.model';
 import { Role } from '../auth/model/role.model';
 import { Rule } from '../auth/model/rule.model';
+import { Post } from '../post/post.model';
+import { UserPost } from '../post/user-post.model';
+import { PostCategory } from '../category/post-category.model';
+import { Subscription } from '../subscription/subscription.model';
+import { UserMail } from '../mail/user-mail.model';
+import { Category } from '../category/category.model';
 
 @Global()
 @Module({
@@ -21,7 +27,13 @@ import { Rule } from '../auth/model/rule.model';
         AuthAssignments,
         UserRole,
         Role,
-        Rule
+        Rule,
+        Post,
+        UserPost,
+        Category,
+        PostCategory,
+        Subscription,
+        UserMail
       ],
     })
   ]

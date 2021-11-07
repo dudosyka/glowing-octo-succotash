@@ -1,4 +1,5 @@
-import { Table, Column, Model } from 'sequelize-typescript'
+import { Table, Column, Model, ForeignKey } from 'sequelize-typescript';
+import { Subscription } from '../subscription/subscription.model';
 
 @Table({
   tableName: 'user',
@@ -6,6 +7,9 @@ import { Table, Column, Model } from 'sequelize-typescript'
   updatedAt: false,
 })
 export class User extends Model {
+  @ForeignKey(() => Subscription)
+  id: number
+
   @Column
   fullname: string
 

@@ -5,7 +5,7 @@ import { GuestGuard } from './auth/guard/guest.guard';
 import { UserService } from './user/user.service';
 import { User } from './user/user.model';
 import { Error } from './validate.util';
-import { COMMON_USER } from './auth/constants';
+import { COMMON_USER } from './constants';
 
 @Controller()
 export class AppController {
