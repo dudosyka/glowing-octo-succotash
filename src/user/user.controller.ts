@@ -23,4 +23,5 @@ export class UserController {
     return this.postService.createPost(req.user, req.body);
   }
 
+
 }

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
-import { Error, ValidateUtil } from '../validate.util';
-import { CryptUtil } from '../crypt.util';
+import { Error, ValidateUtil } from '../utils/validate.util';
+import { CryptUtil } from '../utils/crypt.util';
 
 @Injectable()
 export class UserService {

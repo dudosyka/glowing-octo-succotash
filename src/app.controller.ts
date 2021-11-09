@@ -4,7 +4,7 @@ import { LocalAuthGuard } from './auth/guard/local-auth.guard';
 import { GuestGuard } from './auth/guard/guest.guard';
 import { UserService } from './user/user.service';
 import { User } from './user/user.model';
-import { Error } from './validate.util';
+import { Error } from './utils/validate.util';
 import { COMMON_USER } from './constants';
 
 @Controller()

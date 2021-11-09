@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Post } from './post.model';
 import { UserPost } from './user-post.model';
@@ -6,6 +6,7 @@ import { SubscriptionService } from '../subscription/subscription.service';
 import { Observable } from 'rxjs';
 import { CategoryService } from '../category/category.service';
 import { CATEGORY_SUBSCRIPTION_TYPE, USER_SUBSCRIPTION_TYPE } from '../constants';
+import { User } from '../user/user.model';
 
 @Injectable()
 export class PostService {
@@ -15,7 +16,7 @@ export class PostService {
               private readonly categoryService: CategoryService,
               private readonly subscriptionService: SubscriptionService) {}
 
-  async createPost(user, data) {
+  createPost(user: User, data): Observable<any> {
     return new Observable(subscriber => {
       const category = data.category ?? false;
       delete data.category;
@@ -31,5 +32,25 @@ export class PostService {
         subscriber.complete();
       });
     });
+  }
+
+  async remove(userId: number, postId: number): Promise<boolean> {
+    const userPost = await this.userPostModel.findOne({
+      where: {
+        user_id: userId,
+        post_id: postId
+      }
+    });
+    console.log(userPost);
+    if (!userPost)
+      throw new NotFoundException();
+
+    await this.postModel.destroy({
+      where: {
+        id: postId
+      }
+    });
+
+    return true;
   }
 }

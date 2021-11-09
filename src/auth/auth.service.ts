@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { CryptUtil } from '../crypt.util';
+import { CryptUtil } from '../utils/crypt.util';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserRole } from './model/user.role.model';
 import { Role } from './model/role.model';
