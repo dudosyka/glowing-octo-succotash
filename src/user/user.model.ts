@@ -1,5 +1,6 @@
 import { Table, Column, Model, ForeignKey } from 'sequelize-typescript';
 import { Subscription } from '../subscription/subscription.model';
+import { UserPost } from '../post/user-post.model';
 
 @Table({
   tableName: 'user',
@@ -8,6 +9,7 @@ import { Subscription } from '../subscription/subscription.model';
 })
 export class User extends Model {
   @ForeignKey(() => Subscription)
+  @ForeignKey(() => UserPost)
   id: number
 
   @Column

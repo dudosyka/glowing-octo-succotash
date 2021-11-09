@@ -3,10 +3,16 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
 import { Error, ValidateUtil } from '../utils/validate.util';
 import { CryptUtil } from '../utils/crypt.util';
+import { PostService } from '../post/post.service';
+import { SubscriptionService } from '../subscription/subscription.service';
+import { USER_SUBSCRIPTION_TYPE } from '../constants';
+import { Post } from '../post/post.model';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User) private userModel: typeof User, private crypt: CryptUtil) {}
+  constructor(@InjectModel(User) private userModel: typeof User, private crypt: CryptUtil,
+              private readonly postService: PostService,
+              private readonly subscriptionService: SubscriptionService) {}
 
   async findOne(id: number) {
     return this.userModel.findOne({
@@ -19,10 +25,14 @@ export class UserService {
     })
   }
 
-  async findByLogin(username: string): Promise<User | null> {
+  async findByLogin(username: string, excludePass: boolean = false): Promise<User | null> {
+    const exclude: string[] = excludePass ? ['password'] : [];
     return this.userModel.findOne({
       where: {
         username
+      },
+      attributes: {
+        exclude
       }
     })
   }
@@ -49,5 +59,17 @@ export class UserService {
     user.created = Date.now();
     user.password = await this.crypt.crypt(user.password);
     return await this.userModel.create(user);
+  }
+
+  async getProfile(viewer: User, username: string) {
+    const profileData: User = await this.findByLogin(username, true);
+    const isSubscribed: boolean = await this.subscriptionService.isUserSubscribed(viewer.id, profileData.id, USER_SUBSCRIPTION_TYPE);
+    const lastPosts: Post[] = await this.postService.getLastFromUser(profileData.id);
+    const clearData: any = {...profileData}
+    return {
+      ...clearData.dataValues,
+      isSubscribed,
+      lastPosts
+    }
   }
 }

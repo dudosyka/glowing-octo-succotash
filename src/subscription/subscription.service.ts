@@ -42,4 +42,12 @@ export class SubscriptionService {
     });
     return true;
   }
+
+  async getSubscriptions(userId) {
+    return await this.subscriptionModel.findAll({ where: { user_id: userId } });
+  }
+
+  async isUserSubscribed(userId, subscription, subscription_type): Promise<boolean> {
+    return (await this.subscriptionModel.findOne({ where: { user_id: userId, subscription, subscription_type } }) !== null);
+  }
 }

@@ -6,12 +6,14 @@ import { UserController } from './user.controller';
 import { PassportModule } from '@nestjs/passport';
 import { CryptUtil } from '../utils/crypt.util';
 import { PostModule } from '../post/post.module';
+import { SubscriptionModule } from '../subscription/subscription.module';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([User]),
     PassportModule,
-    PostModule
+    PostModule,
+    SubscriptionModule
   ],
   providers: [UserService, CryptUtil],
   exports: [UserService],

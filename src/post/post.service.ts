@@ -34,6 +34,19 @@ export class PostService {
     });
   }
 
+  async getLastFromUser(userId: number, num: number = 3): Promise<Post[]> {
+    return await this.userPostModel.findAll({
+      where: {
+        user_id: userId
+      },
+      include: [Post],
+      limit: num,
+      order: [
+        ['id', 'DESC']
+      ]
+    }).then(r => r.map(el => el.post));
+  }
+
   async remove(userId: number, postId: number): Promise<boolean> {
     const userPost = await this.userPostModel.findOne({
       where: {
