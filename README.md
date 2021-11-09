@@ -3,8 +3,8 @@
 </p>
 
 ## Description
-Little Pet project to learn [TypeScript](https://www.typescriptlang.org/) and 
-[Nest](https://github.com/nestjs/nest) framework.
+Little Pet project (Blog system) to learn [TypeScript](https://www.typescriptlang.org/),
+[Nest](https://github.com/nestjs/nest) framework and [React](https://reactjs.org)
 
 ## Installation
 
