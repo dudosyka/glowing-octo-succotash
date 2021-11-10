@@ -72,4 +72,9 @@ export class UserService {
       lastPosts
     }
   }
+
+  async getPosts(target: string): Promise<Post[]> {
+    const targetUser = await this.findByLogin(target);
+    return await this.postService.getUserPosts(targetUser.id);
+  }
 }

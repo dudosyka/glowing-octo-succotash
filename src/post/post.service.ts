@@ -66,4 +66,16 @@ export class PostService {
 
     return true;
   }
+
+  async getUserPosts(userId: number): Promise<Post[]> {
+    return await this.userPostModel.findAll({
+      include: [Post],
+      where: {
+        user_id: userId
+      },
+      order: [
+        ['id', 'DESC'],
+      ]
+    }).then(r => r.map(el => el.post));
+  }
 }
