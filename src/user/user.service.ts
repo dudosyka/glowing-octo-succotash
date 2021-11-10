@@ -15,14 +15,7 @@ export class UserService {
               private readonly subscriptionService: SubscriptionService) {}
 
   async findOne(id: number) {
-    return this.userModel.findOne({
-      attributes: {
-        exclude: ['password']
-      },
-      where: {
-        id
-      }
-    })
+    return this.userModel.findByPk(id);
   }
 
   async findByLogin(username: string, excludePass: boolean = false): Promise<User | null> {
@@ -76,5 +69,10 @@ export class UserService {
   async getPosts(target: string): Promise<Post[]> {
     const targetUser = await this.findByLogin(target);
     return await this.postService.getUserPosts(targetUser.id);
+  }
+
+  async getSubscriptions(username: string): Promise<any[]> {
+    const target = await this.findByLogin(username);
+    return await this.subscriptionService.getSubscriptions(target.id);
   }
 }

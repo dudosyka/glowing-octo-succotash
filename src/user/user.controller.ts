@@ -15,14 +15,20 @@ export class UserController {
   @Rule(1)
   @UseGuards(JwtAuthGuard, CheckRuleGuard)
   @Post('/:username')
-  async getProfile(@Request() req, @Param('username') username: string) {
+  async profile(@Request() req, @Param('username') username: string) {
     return await this.userService.getProfile(req.user, username);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/:username/posts')
-  async userPosts(@Request() req, @Param('username') username: string): Promise<PostModel[]> {
+  async posts(@Param('username') username: string): Promise<PostModel[]> {
     return await this.userService.getPosts(username);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':username/sub')
+  async subscribes(@Param('username') username: string) {
+    return await this.userService.getSubscriptions(username);
   }
 
   @Rule(3)

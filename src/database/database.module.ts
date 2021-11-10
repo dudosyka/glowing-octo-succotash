@@ -11,6 +11,7 @@ import { PostCategory } from '../category/post-category.model';
 import { Subscription } from '../subscription/subscription.model';
 import { UserMail } from '../mail/user-mail.model';
 import { Category } from '../category/category.model';
+import { DatabaseService } from './database.service';
 
 @Global()
 @Module({
@@ -36,6 +37,8 @@ import { Category } from '../category/category.model';
         UserMail
       ],
     })
-  ]
+  ],
+  providers: [DatabaseService],
+  exports: [DatabaseService]
 })
 export class DatabaseModule {}
