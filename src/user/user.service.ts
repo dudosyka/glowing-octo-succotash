@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
 import { Error, ValidateUtil } from '../utils/validate.util';
 import { CryptUtil } from '../utils/crypt.util';
 import { PostService } from '../post/post.service';
-import { SubscriptionService } from '../subscription/subscription.service';
+import { SubscriptionService, UserAddSubscription, UserSubscriptionList } from '../subscription/subscription.service';
 import { USER_SUBSCRIPTION_TYPE } from '../constants';
 import { Post } from '../post/post.model';
 
@@ -27,7 +27,7 @@ export class UserService {
       attributes: {
         exclude
       }
-    })
+    });
   }
 
   async createUser(user: any): Promise<Error[] | User> {
@@ -66,13 +66,31 @@ export class UserService {
     }
   }
 
-  async getPosts(target: string): Promise<Post[]> {
+  async getPosts(target: string): Promise<Post[]> | never {
     const targetUser = await this.findByLogin(target);
+    if (target === null)
+      throw new NotFoundException();
     return await this.postService.getUserPosts(targetUser.id);
   }
 
-  async getSubscriptions(username: string): Promise<any[]> {
+  async getSubscriptions(username: string): Promise<UserSubscriptionList[]> | never {
     const target = await this.findByLogin(username);
+    if (target === null)
+      throw new NotFoundException();
     return await this.subscriptionService.getSubscriptions(target.id);
+  }
+
+  async removeSubscription(username: string, subId: number): Promise<boolean> | never {
+    const target = await this.findByLogin(username);
+    if (target === null)
+      throw new NotFoundException();
+    return await this.subscriptionService.remove(subId);
+  }
+
+  async addSubscription(username: string, subscription: UserAddSubscription): Promise<boolean> | never {
+    const target = await this.findByLogin(username);
+    if (target === null)
+      throw new NotFoundException();
+    return await this.subscriptionService.add(target.id, subscription);
   }
 }

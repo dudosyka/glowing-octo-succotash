@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { MailService } from '../mail/mail.service';
 import { Subscription } from './subscription.model';
@@ -7,6 +7,18 @@ import { Op } from 'sequelize';
 import { CATEGORY_SUBSCRIPTION_TYPE, USER_SUBSCRIPTION_TYPE } from '../constants';
 import { Post } from '../post/post.model';
 import { DatabaseService } from '../database/database.service';
+
+export interface UserSubscriptionList {
+  id: number,
+  subscription_type: number,
+  subscription_id: number,
+  subscription_name: string
+}
+
+export interface UserAddSubscription {
+  type: number, 
+  id: number
+}
 
 @Injectable()
 export class SubscriptionService {
@@ -45,7 +57,7 @@ export class SubscriptionService {
     return true;
   }
 
-  async getSubscriptions(userId): Promise<{id: number, subscription_type: number, subscription_id: number, subscription_name: string}[]> {
+  async getSubscriptions(userId): Promise<UserSubscriptionList[]> {
     console.log();
     return await this.subscriptionModel.findAll({
       attributes: [
@@ -77,5 +89,35 @@ export class SubscriptionService {
 
   async isUserSubscribed(userId, subscription, subscription_type): Promise<boolean> {
     return (await this.subscriptionModel.findOne({ where: { user_id: userId, subscription, subscription_type } }) !== null);
+  }
+
+  async remove(subId): Promise<boolean> | never {
+    return await this.subscriptionModel.destroy({
+      where: {
+        id: subId
+      }
+    }).then(r => {
+      if (r === 0)
+        throw new NotFoundException();
+      return r !== 0;
+    });
+  }
+
+  async add(userId: number, subscription: UserAddSubscription): Promise<boolean> | never {
+    const sub = await this.subscriptionModel.findOne({
+      where: {
+        user_id: userId,
+        subscription_type: subscription.type,
+        subscription: subscription.id
+      }
+    });
+    if (sub !== null)
+      throw new HttpException("Already subscribed", 409);
+    const subscribe = await this.subscriptionModel.create({
+      user_id: userId,
+      subscription_type: subscription.type,
+      subscription: subscription.id
+    });
+    return !!subscribe;
   }
 }
